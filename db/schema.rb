@@ -10,9 +10,28 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_06_02_014548) do
+ActiveRecord::Schema[7.0].define(version: 2022_06_02_023857) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "addresses", force: :cascade do |t|
+    t.string "street"
+    t.string "state"
+    t.string "city"
+    t.integer "zip"
+    t.bigint "contact_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["contact_id"], name: "index_addresses_on_contact_id"
+  end
+
+  create_table "comments", force: :cascade do |t|
+    t.text "body"
+    t.bigint "note_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["note_id"], name: "index_comments_on_note_id"
+  end
 
   create_table "contacts", force: :cascade do |t|
     t.string "first_name"
@@ -25,4 +44,15 @@ ActiveRecord::Schema[7.0].define(version: 2022_06_02_014548) do
     t.boolean "friend"
   end
 
+  create_table "notes", force: :cascade do |t|
+    t.text "body"
+    t.bigint "contact_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["contact_id"], name: "index_notes_on_contact_id"
+  end
+
+  add_foreign_key "addresses", "contacts"
+  add_foreign_key "comments", "notes"
+  add_foreign_key "notes", "contacts"
 end
